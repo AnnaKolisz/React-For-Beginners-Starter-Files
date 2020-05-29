@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { formatPrice } from "../helpers";
 
 class Order extends React.Component {

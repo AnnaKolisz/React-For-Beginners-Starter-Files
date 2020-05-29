@@ -24,7 +24,7 @@ class AddFishForm extends React.Component {
     }
     render() {
         return (
-     <form class="fish-edit" onSubmit={this.createFish}>
+     <form className="fish-edit" onSubmit={this.createFish}>
          <input type="text" name="name" ref={this.nameRef} placeholder="Name" />
          <input type="text" name="price" ref={this.priceRef} placeholder="Price" />
          <select type="text" name="status"  ref={this.statusRef}placeholder="Status">
