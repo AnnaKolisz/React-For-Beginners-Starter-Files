@@ -15,10 +15,18 @@ class App extends React.Component{
 
     componentDidMount() {
         const { params } = this.props.match;
+        const localStorageRef = localStorage.getItem(params.storeId);
+        if(localStorageRef){
+            this.setState({order: JSON.parse(localStorageRef)});
+        }
         this.ref = base.syncState(`${params.storeId}/fishes`, {
             context: this,
             state: 'fishes'
         });
+    }
+
+    componentDidUpdate() {
+        localStorage.setItem(this.props.match.params.storeId, JSON.stringify(this.state.order));
     }
 
     componentWillUnmount() {
@@ -33,9 +41,32 @@ class App extends React.Component{
        })
     }
 
+    updateFish = (key, updateFish) => {
+        const fishes = { ...this.state.fishes};
+        fishes[key]= updateFish;
+        this.setState({fishes});
+    }
+
+    deleteFish = (key) => {
+        const fishes = {...this.state.fishes};
+        fishes[key] = null;
+        this.setState({ fishes});
+
+    }
+
     addToOrder = key => {
         const order = { ...this.state.order};
         order[key] = order[key] + 1 || 1;
+        this.setState({ order });
+    }
+
+    removeFromOrder = (key) => {
+        const order = { ...this.state.order};
+       if(order[key]  > 1){
+           order[key] = order[key] - 1;
+       } else {
+           delete order[key];
+       }
         this.setState({ order });
     }
     
@@ -58,12 +89,19 @@ class App extends React.Component{
                     details={this.state.fishes[key]}/>)}
                    </ul>
                </div>
-               <Order fishes={this.state.fishes} order={this.state.order}/>
+               <Order 
+                fishes={this.state.fishes} 
+                order={this.state.order}
+                removeFromOrder={this.removeFromOrder}
+                />
                <Inventory 
                 addFish={this.addFish}
-                loadSampleFishes={this.loadSampleFishes}/>
-            
-
+                updateFish = {this.updateFish }
+                deleteFish = {this.deleteFish }
+                loadSampleFishes={this.loadSampleFishes}
+                fishes={this.state.fishes}
+                />
+                
             </div>
         );
 
